@@ -36,8 +36,12 @@ def _search_item(bvid="BV1xx411c7m9"):
         "duration": "2:03",
         "pic": "//i0.hdslb.com/bfs/archive/a.jpg",
         "play": 50000,
+        "like": 1234,
+        "favorites": 456,
+        "review": 20,
         "video_review": 20,
         "danmaku": 8,
+        "typename": "科技",
     }
 
 
@@ -114,7 +118,10 @@ def test_search_normalizes_fields():
     assert it["title"] == "AI数字人教程"
     assert it["cover_url"].startswith("https://")
     assert it["view"] == 50000
+    assert it["like"] == 1234
+    assert it["favorite"] == 456
     assert it["reply"] == 20
+    assert it["tname"] == "科技"
     assert it["duration"] == 123
     assert it["pubdate"] == 1700000000
 

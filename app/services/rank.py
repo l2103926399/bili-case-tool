@@ -1,14 +1,19 @@
 """质量分计算与排序。
 
-质量分 = 互动率×30% + 收藏率×20% + 播放量分×20% + 投币率×15% + 时效因子×15%
-各比率按经验基准归一化到 0-100。
+质量分 = 互动率×35% + 收藏率×25% + 播放量分×25% + 时效因子×15%
+比率按经验基准归一化到 0-100；数据来自 B站 搜索结果，不依赖详情接口
+（详情接口对机房 IP 有风控）。投币数搜索接口不提供，不计入。
 """
 import math
 import time
 
 IR_FULL = 0.10   # 互动率满分基准：10%
 FR_FULL = 0.05   # 收藏率满分基准：5%
-CR_FULL = 0.02   # 投币率满分基准：2%
+
+W_INTERACTION = 0.35
+W_FAVORITE = 0.25
+W_PLAY = 0.25
+W_RECENCY = 0.15
 
 
 def _rate_score(rate: float, full: float) -> float:
@@ -24,16 +29,14 @@ def compute_quality_score(view, like, coin, favorite, reply, pubdate, now=None):
     now = now or int(time.time())
     ir = (like + coin + favorite + reply) / view
     fr = favorite / view
-    cr = coin / view
     play_score = min(100.0, math.log10(max(view, 1)) / math.log10(1_000_000) * 100.0)
     age_days = max(0.0, (now - (pubdate or 0)) / 86400.0)
     recency = max(0.0, min(100.0, 100.0 * (1 - age_days / 180.0)))
     score = (
-        _rate_score(ir, IR_FULL) * 0.30
-        + _rate_score(fr, FR_FULL) * 0.20
-        + play_score * 0.20
-        + _rate_score(cr, CR_FULL) * 0.15
-        + recency * 0.15
+        _rate_score(ir, IR_FULL) * W_INTERACTION
+        + _rate_score(fr, FR_FULL) * W_FAVORITE
+        + play_score * W_PLAY
+        + recency * W_RECENCY
     )
     return round(score, 2)
 

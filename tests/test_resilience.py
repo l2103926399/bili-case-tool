@@ -59,6 +59,7 @@ def test_detail_failure_marks_incomplete(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "DB_PATH", tmp_path / "r.db")
     monkeypatch.setattr(config, "DATA_DIR", tmp_path)
     monkeypatch.setattr(config, "DETAIL_INTERVAL", 0.0)
+    monkeypatch.setattr(config, "ENRICH_DETAIL", True)
     database.init_db()
 
     items = [_search_item("BVok"), _search_item("BVfail")]

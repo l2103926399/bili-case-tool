@@ -20,6 +20,9 @@ DETAIL_CONCURRENCY = 5          # 详情并发数
 REQUEST_TIMEOUT = 10.0          # 单请求超时（秒）
 MAX_RETRIES = 3                 # 失败重试次数
 
+# 单次搜索是否再逐条抓详情（补充投币数等）。机房 IP 会被 B站 风控，默认关闭。
+ENRICH_DETAIL = False
+
 # 公共部署的自我保护（防止被刷、防止服务器 IP 被 B站 风控）
 RATE_LIMIT_PER_MINUTE = 12      # 单个 IP 每分钟最多搜索次数
 GLOBAL_SEARCH_CONCURRENCY = 2   # 同时进行的搜索任务上限

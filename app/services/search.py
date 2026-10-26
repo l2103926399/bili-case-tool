@@ -98,7 +98,10 @@ async def search_and_store(keyword, time_range="all", sort="quality", client=Non
     try:
         search_items = await client.search_videos(keyword)
         search_items = list(search_items)[: config.SEARCH_MAX_RESULTS]
-        pairs = await _fetch_details(client, search_items)
+        if config.ENRICH_DETAIL:
+            pairs = await _fetch_details(client, search_items)
+        else:
+            pairs = [(base, None) for base in search_items]
 
         conn = database.get_conn()
         try:
@@ -108,9 +111,7 @@ async def search_and_store(keyword, time_range="all", sort="quality", client=Non
                 if detail:
                     # view 或 archive/stat 的结果覆盖搜索摘要，缺失字段沿用 base
                     record.update({k: v for k, v in detail.items() if v is not None})
-                    complete = 1
-                else:
-                    complete = 0
+                complete = 1 if (detail or not config.ENRICH_DETAIL) else 0
 
                 record["quality_score"] = rank.compute_quality_score(
                     record.get("view", 0), record.get("like", 0),

@@ -37,12 +37,11 @@ def bili_url(bvid: str) -> str:
 def ratios(row: dict) -> dict:
     view = row.get("view") or 0
     if view <= 0:
-        return {"interaction": None, "favorite": None, "coin": None}
+        return {"interaction": None, "favorite": None}
     ir = (row.get("like", 0) + row.get("coin", 0) + row.get("favorite", 0) + row.get("reply", 0)) / view
     return {
         "interaction": round(ir * 100, 2),
         "favorite": round((row.get("favorite", 0) / view) * 100, 2),
-        "coin": round((row.get("coin", 0) / view) * 100, 2),
     }
 
 

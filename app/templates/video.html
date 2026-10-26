@@ -22,7 +22,6 @@
     <div class="stats">
       <div class="stat"><b>{{ v.view_str }}</b><span>播放</span></div>
       <div class="stat"><b>{{ v.like_str }}</b><span>点赞</span></div>
-      <div class="stat"><b>{{ v.coin_str }}</b><span>投币</span></div>
       <div class="stat"><b>{{ v.favorite_str }}</b><span>收藏</span></div>
       <div class="stat"><b>{{ v.reply_str }}</b><span>评论</span></div>
       <div class="stat"><b>{{ v.danmaku_str }}</b><span>弹幕</span></div>
@@ -31,7 +30,6 @@
     <div class="ratios">
       <span class="ratio">互动率 <b>{{ ratios.interaction|default("—", true) }}%</b></span>
       <span class="ratio">收藏率 <b>{{ ratios.favorite|default("—", true) }}%</b></span>
-      <span class="ratio">投币率 <b>{{ ratios.coin|default("—", true) }}%</b></span>
     </div>
     {% if v.data_complete == 0 %}
     <p class="hint-line">这条记录没拿到完整互动数据（B站 风控），分数只按播放量与时效计算。</p>

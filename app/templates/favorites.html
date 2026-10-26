@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}我的案例 · B站优质视频案例库{% endblock %}
+{% block nav_fav %}active{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>我的案例</h1>
+  <p class="lede">收藏和备注只保存在这台设备的浏览器里，换浏览器或换设备不会同步。</p>
+</div>
+
+<div class="toolbar">
+  <span id="fav-count" class="status"></span>
+</div>
+
+<section id="fav-grid" class="grid"></section>
+
+<div id="fav-empty" class="empty" hidden>
+  <h2>还没有收藏案例</h2>
+  <p>搜索之后点卡片上的 ☆，案例就会出现在这里。</p>
+  <a class="btn primary" href="/">去搜索</a>
+</div>
+{% endblock %}

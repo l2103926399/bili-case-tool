@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ v.title if v else "未找到视频" }} · B站优质视频案例库{% endblock %}
+{% block nav_home %}active{% endblock %}
+{% block content %}
+{% if v %}
+<a class="back" href="/">← 返回搜索</a>
+<article class="detail">
+  <div class="detail-cover">
+    <div class="cover-ph">封面暂不可用</div>
+    {% if v.cover_url %}<img src="{{ v.cover_url }}" alt="视频封面" referrerpolicy="no-referrer" onerror="this.style.display='none'">{% endif %}
+    {% if v.duration_str %}<span class="duration">{{ v.duration_str }}</span>{% endif %}
+  </div>
+  <div class="detail-main">
+    <h1 class="detail-title">{{ v.title }}</h1>
+    <p class="detail-meta">
+      <span>{{ v.author_name }}</span>
+      <span class="dot">·</span>
+      <span>{{ v.pubdate_str }}</span>
+      {% if v.tname %}<span class="dot">·</span><span>{{ v.tname }}</span>{% endif %}
+    </p>
+
+    <div class="stats">
+      <div class="stat"><b>{{ v.view_str }}</b><span>播放</span></div>
+      <div class="stat"><b>{{ v.like_str }}</b><span>点赞</span></div>
+      <div class="stat"><b>{{ v.coin_str }}</b><span>投币</span></div>
+      <div class="stat"><b>{{ v.favorite_str }}</b><span>收藏</span></div>
+      <div class="stat"><b>{{ v.reply_str }}</b><span>评论</span></div>
+      <div class="stat"><b>{{ v.danmaku_str }}</b><span>弹幕</span></div>
+    </div>
+
+    <div class="ratios">
+      <span class="ratio">互动率 <b>{{ ratios.interaction|default("—", true) }}%</b></span>
+      <span class="ratio">收藏率 <b>{{ ratios.favorite|default("—", true) }}%</b></span>
+      <span class="ratio">投币率 <b>{{ ratios.coin|default("—", true) }}%</b></span>
+    </div>
+
+    <div class="actions">
+      <a class="btn primary" href="{{ bili_url }}" target="_blank" rel="noopener">▶ 去B站观看</a>
+      <button id="btn-fav" class="btn" data-bvid="{{ bvid }}">☆ 收藏</button>
+    </div>
+
+    <div class="note-box">
+      <label for="note" class="note-label">我的备注 <span id="note-state" class="hint"></span></label>
+      <textarea id="note" rows="4" placeholder="记下这条案例值得学的点：钩子、结构、节奏、转化…"></textarea>
+      <div class="note-actions">
+        <button id="btn-save-note" class="btn" data-bvid="{{ bvid }}">保存备注</button>
+      </div>
+    </div>
+  </div>
+</article>
+{% else %}
+<div class="empty">
+  <h2>没找到这条视频</h2>
+  <p>它可能还没被搜到过，或者库里的记录被清掉了（bvid：{{ bvid }}）。</p>
+  <a class="btn primary" href="/">回首页重新搜索</a>
+</div>
+{% endif %}
+{% endblock %}

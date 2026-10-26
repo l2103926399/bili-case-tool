@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="输入关键词，按质量分、播放量、发布时间筛选 B站 优质视频案例。">
+  <title>{% block title %}B站优质视频案例库{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>B站案例库</span>
+      </a>
+      <nav class="nav">
+        <a href="/" class="{% block nav_home %}{% endblock %}">搜索</a>
+        <a href="/favorites" class="{% block nav_fav %}{% endblock %}">我的案例</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>数据来自 B站 公开页面，数据仅供个人分析参考。</span>
+      <span class="footer-dot">·</span>
+      <span>收藏与备注只保存在本机浏览器。</span>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

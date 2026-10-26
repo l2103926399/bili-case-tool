@@ -141,21 +141,32 @@ class BiliClient:
         return self._wbi_keys
 
     async def get_video_detail(self, bvid: str):
-        """返回详情字典；单条不可用返回 None；412 抛出。
-        view 接口需带匿名 cookie + WBI 签名，直接带签名请求，不做无签名试探。"""
+        """返回详情字典；单条不可用返回 None。
+
+        主链路是 view 接口（需匿名 cookie + WBI 签名）；机房 IP 常被 412 风控，
+        这时降级到 archive/stat（只含互动数据，标题等沿用搜索结果）。
+        """
         await self._rate_limit_detail()
         try:
             img_key, sub_key = await self._get_wbi_keys()
             signed = wbi.sign({"bvid": bvid}, img_key, sub_key)
             data = await self._request(config.BILI_VIEW_URL, signed)
-        except Bili412Error:
-            raise
-        except BiliRequestError:
-            logger.warning("视频详情获取失败，标记数据不全: %s", bvid)
+            return self._map_view(data, bvid)
+        except (Bili412Error, BiliRequestError) as exc:
+            logger.warning("view 接口不可用，改走 archive/stat: %s (%s)", bvid, exc)
+
+        try:
+            stat = await self._request(config.BILI_STAT_URL, {"bvid": bvid})
+            return self._map_stat(stat, bvid)
+        except Exception as exc:
+            logger.warning("archive/stat 也不可用: %s (%s)", bvid, exc)
             return None
+
+    @staticmethod
+    def _map_view(data: dict, bvid: str) -> dict:
         st = data.get("stat", {})
         owner = data.get("owner", {})
-        pic = self._normalize_pic(data.get("pic", ""))
+        pic = BiliClient._normalize_pic(data.get("pic", ""))
         return {
             "bvid": data.get("bvid", bvid),
             "title": data.get("title"),
@@ -172,6 +183,20 @@ class BiliClient:
             "reply": int(st.get("reply", 0) or 0),
             "danmaku": int(st.get("danmaku", 0) or 0),
             "share": int(st.get("share", 0) or 0),
+        }
+
+    @staticmethod
+    def _map_stat(data: dict, bvid: str) -> dict:
+        """archive/stat 只返回互动数据，其余字段由搜索结果补齐。"""
+        return {
+            "bvid": data.get("bvid", bvid),
+            "view": int(data.get("view", 0) or 0),
+            "like": int(data.get("like", 0) or 0),
+            "coin": int(data.get("coin", 0) or 0),
+            "favorite": int(data.get("favorite", 0) or 0),
+            "reply": int(data.get("reply", 0) or 0),
+            "danmaku": int(data.get("danmaku", 0) or 0),
+            "share": int(data.get("share", 0) or 0),
         }
 
     # ---------- 字段归一化 ----------

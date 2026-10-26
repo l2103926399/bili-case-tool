@@ -27,6 +27,7 @@ GLOBAL_SEARCH_CONCURRENCY = 2   # 同时进行的搜索任务上限
 # B站接口
 BILI_SEARCH_URL = "https://api.bilibili.com/x/web-interface/search/type"
 BILI_VIEW_URL = "https://api.bilibili.com/x/web-interface/view"
+BILI_STAT_URL = "https://api.bilibili.com/x/web-interface/archive/stat"
 BILI_NAV_URL = "https://api.bilibili.com/x/web-interface/nav"
 
 # 注意：实测完整 Chrome 长 UA 会触发 B站 412 风控，使用短版 UA 可通过

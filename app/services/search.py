@@ -104,12 +104,12 @@ async def search_and_store(keyword, time_range="all", sort="quality", client=Non
         try:
             fetched_at = int(time.time())
             for base, detail in pairs:
+                record = dict(base)
                 if detail:
-                    record = dict(detail)
-                    record.setdefault("tname", base.get("tname"))
+                    # view 或 archive/stat 的结果覆盖搜索摘要，缺失字段沿用 base
+                    record.update({k: v for k, v in detail.items() if v is not None})
                     complete = 1
                 else:
-                    record = dict(base)
                     complete = 0
 
                 record["quality_score"] = rank.compute_quality_score(

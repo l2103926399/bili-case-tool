@@ -33,6 +33,9 @@
       <span class="ratio">收藏率 <b>{{ ratios.favorite|default("—", true) }}%</b></span>
       <span class="ratio">投币率 <b>{{ ratios.coin|default("—", true) }}%</b></span>
     </div>
+    {% if v.data_complete == 0 %}
+    <p class="hint-line">这条记录没拿到完整互动数据（B站 风控），分数只按播放量与时效计算。</p>
+    {% endif %}
 
     <div class="actions">
       <a class="btn primary" href="{{ bili_url }}" target="_blank" rel="noopener">▶ 去B站观看</a>

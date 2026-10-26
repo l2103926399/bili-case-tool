@@ -93,6 +93,9 @@
 
   /* ---------- 卡片渲染 ---------- */
   function scoreBadge(item) {
+    if (item.data_complete === 0 || item.data_complete === false) {
+      return '<span class="score gray">数据不全</span>';
+    }
     if (item.quality_score == null) {
       return '<span class="score gray">数据不全</span>';
     }
